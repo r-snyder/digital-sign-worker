@@ -1,0 +1,8 @@
+name = "kp-sign"
+main = "index.js"
+compatibility_date = "2023-08-23"
+compatibility_flags = [ "nodejs_compat" ]
+
+kv_namespaces = [
+  { binding = "KP_EVENTS", id = "c97a562963ef444fa0867bd575df43b2" }
+]

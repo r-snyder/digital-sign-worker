@@ -1,0 +1,15 @@
+name = "kp-sign"
+main = "src/index.js"
+compatibility_date = "2024-06-20"
+workers_dev = true
+compatibility_flags = [ "nodejs_compat" ]
+
+[triggers]
+crons = ["*/5 * * * *"]
+
+[placement]
+mode = "smart"
+
+[[kv_namespaces]]
+id = "c97a562963ef444fa0867bd575df43b2"
+binding = "KP_EVENTS"

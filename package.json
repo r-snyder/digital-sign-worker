@@ -1,0 +1,19 @@
+{
+  "name": "kp-sign",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "start": "wrangler dev"
+  },
+  "devDependencies": {
+    "wrangler": "^3.60.3"
+  },
+  "dependencies": {
+    "@jsquash/png": "^3.0.1",
+    "@jsquash/webp": "^1.4.0",
+    "@supabase/supabase-js": "^2.43.5",
+    "moment-timezone": "^0.5.45"
+  }
+}
