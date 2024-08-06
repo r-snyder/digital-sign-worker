@@ -64,8 +64,8 @@ async function fetchAndProcessEvents(env, supabase, cachePrefix) {
     const deleteEventPromise = supabase.from('events').delete().eq('id', event.id);
 
     // Delete image from Supabase storage if it exists
-    const deleteImagePromise = event.image_banner ?
-      supabase.storage.from('images').remove([event.image_banner]) :
+    const deleteImagePromise = event.supabase_image_banner ?
+      supabase.storage.from('images').remove([event.supabase_image_banner]) :
       Promise.resolve();
 
     // Delete KV hash entries
@@ -78,7 +78,7 @@ async function fetchAndProcessEvents(env, supabase, cachePrefix) {
 
     // Wait for all operations to complete
     await Promise.all([deleteEventPromise, deleteImagePromise, deleteKVPromise]);
-     // Remove the event from supabaseEvents map to avoid further processing
+    // Remove the event from supabaseEvents map to avoid further processing
     supabaseEvents.splice(supabaseEvents.indexOf(event), 1);
     console.log(`Deleted event ${event.id} and related data successfully.`);
   }));
@@ -106,8 +106,8 @@ async function fetchAndProcessEvents(env, supabase, cachePrefix) {
       console.log(`Event ${event.id} deleted successfully.`);
 
       // Delete the image from Supabase storage if it exists
-      if (event.image_banner) {
-        await supabase.storage.from('images').remove([event.image_banner]);
+      if (event.supabase_image_banner) {
+        await supabase.storage.from('images').remove([event.supabase_image_banner]);
         console.log(`Image for event ${event.id} deleted successfully.`);
       }
 
@@ -145,11 +145,11 @@ async function fetchAndProcessEvents(env, supabase, cachePrefix) {
 
       // Handle image changes
       let imagePublicURL = null;
-      const existingEvent = await supabase.from('events').select('original_image_url, image_banner').eq('id', event.id).single();
+      const existingEvent = await supabase.from('events').select('original_image_url, supabase_image_banner').eq('id', event.id).single();
 
       if (!existingEvent.data || existingEvent.data.original_image_url !== event.image_banner) {
-        if (existingEvent.data && existingEvent.data.image_banner) {
-          await supabase.storage.from('images').remove([existingEvent.data.image_banner]);
+        if (existingEvent.data && existingEvent.data.supabase_image_banner) {
+          await supabase.storage.from('images').remove([existingEvent.data.supabase_image_banner]);
         }
 
         const imageResponse = await fetch(event.image_banner);
@@ -175,7 +175,7 @@ async function fetchAndProcessEvents(env, supabase, cachePrefix) {
         id: event.id,
         name: event.name,
         starts_on: event.starts_on,
-        image_banner: imagePublicURL || existingEvent.data?.image_banner,
+        supabase_image_banner: imagePublicURL || existingEvent.data?.supabase_image_banner,
         slug: event.slug,
         original_image_url: event.image_banner
       };
@@ -193,10 +193,6 @@ async function fetchAndProcessEvents(env, supabase, cachePrefix) {
       console.log(`Event ${event.id} has not changed. Skipping...`);
     }
   }));
-
-  const endTime = Date.now();
-  const elapsedTime = endTime - startTime;
-  console.log(`Fetching and processing events complete. Elapsed time: ${elapsedTime} ms.`);
 }
 
 
