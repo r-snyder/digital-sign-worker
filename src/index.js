@@ -143,13 +143,14 @@ async function fetchAndProcessEvents(env, supabase, cachePrefix) {
     // If event data has changed, update database and KV
     if (eventHash !== storedOldHash && eventHash !== storedNewHash) {
       console.log(`Event ${event.id} has changed. Processing...`);
-
       // Handle image changes
       let imagePublicURL = null;
       const existingEvent = await supabase.from('events').select('original_image_url, supabase_image_banner').eq('id', event.id).single();
       console.log(existingEvent)
-      if (!existingEvent.data || existingEvent.data.original_image_url !== event.image_banner) {
-        if (existingEvent.data && existingEvent.data.supabase_image_banner) {
+      console.log(event.image_banner)
+      console.log(event)
+      if (!existingEvent.data || existingEvent.data?.original_image_url !== event.image_banner) {
+        if (existingEvent.data && existingEvent.data?.supabase_image_banner) {
           await supabase.storage.from('images').remove([existingEvent.data.supabase_image_banner]);
         }
 	console.log(event.image_banner)
