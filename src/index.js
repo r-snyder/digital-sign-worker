@@ -147,7 +147,7 @@ async function fetchAndProcessEvents(env, supabase, cachePrefix) {
       // Handle image changes
       let imagePublicURL = null;
       const existingEvent = await supabase.from('events').select('original_image_url, supabase_image_banner').eq('id', event.id).single();
-      console.log(exisitingEvent)
+      console.log(existingEvent)
       if (!existingEvent.data || existingEvent.data.original_image_url !== event.image_banner) {
         if (existingEvent.data && existingEvent.data.supabase_image_banner) {
           await supabase.storage.from('images').remove([existingEvent.data.supabase_image_banner]);
