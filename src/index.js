@@ -168,8 +168,11 @@ async function fetchAndProcessEvents(env, supabase, cachePrefix) {
         }
 
         imagePublicURL = (await supabase.storage.from('images').getPublicUrl(imageName)).data.publicUrl;
+				console.log('Image Public URL:')
+				console.log(imagePublicURL)
       }
-
+			console.log('Existing Event image: ')
+			console.log(exisistingEvent.data?.supabase_image_banner)
       // Upsert event data
       const eventData = {
         id: event.id,
