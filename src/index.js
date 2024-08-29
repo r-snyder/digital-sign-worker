@@ -12,6 +12,7 @@ export default {
     const startTime = Date.now(); // Start timer
     const SUPABASE_URL = env.SUPABASE_URL;
     const SUPABASE_KEY = env.SUPABASE_KEY;
+    console.log(SUPABASE_URL)
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
     const EVENTS_CACHE_PREFIX = 'kp_event_hash_';
 
@@ -146,12 +147,12 @@ async function fetchAndProcessEvents(env, supabase, cachePrefix) {
       // Handle image changes
       let imagePublicURL = null;
       const existingEvent = await supabase.from('events').select('original_image_url, supabase_image_banner').eq('id', event.id).single();
-
+      console.log(exisitingEvent)
       if (!existingEvent.data || existingEvent.data.original_image_url !== event.image_banner) {
         if (existingEvent.data && existingEvent.data.supabase_image_banner) {
           await supabase.storage.from('images').remove([existingEvent.data.supabase_image_banner]);
         }
-
+	console.log(event.image_banner)
         const imageResponse = await fetch(event.image_banner);
         const imageBlob = await imageResponse.blob();
         const imageName = `${event.id}.png`;
@@ -168,11 +169,11 @@ async function fetchAndProcessEvents(env, supabase, cachePrefix) {
         }
 
         imagePublicURL = (await supabase.storage.from('images').getPublicUrl(imageName)).data.publicUrl;
-				console.log('Image Public URL:')
-				console.log(imagePublicURL)
+	console.log('Image Public URL:')
+	console.log(imagePublicURL)
       }
-			console.log('Existing Event image: ')
-			console.log(exisistingEvent.data?.supabase_image_banner)
+      console.log('Existing Event image: ')
+      console.log(exisistingEvent.data?.supabase_image_banner)
       // Upsert event data
       const eventData = {
         id: event.id,
